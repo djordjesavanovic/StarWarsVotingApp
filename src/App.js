@@ -26,8 +26,14 @@ class App extends Component {
         fetch(`https://swapi.dev/api/people/${id}/`)
             .then(res => res.json())
             .then(
-                (result) => {
-                    console.log(result)
+                (res) => {
+                    const elementsIndex = this.state.people.findIndex((element) => element.id === id )
+                    let newArray = [...this.state.people]
+
+                    newArray[elementsIndex] = {...newArray[elementsIndex], res}
+                    this.setState({
+                        people: newArray
+                    })
                 },
                 (error) => {
                     console.log(error)
@@ -57,6 +63,7 @@ class App extends Component {
     }
 
     render() {
+        console.log(this.state.people)
         return (
             <div className="App">
                 {
