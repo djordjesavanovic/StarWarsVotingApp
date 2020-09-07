@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import * as firebase from "firebase";
+import axios from 'axios'
 
 class App extends Component {
 
@@ -24,16 +25,16 @@ class App extends Component {
 
     getCharacters(id) {
         fetch(`https://swapi.dev/api/people/${id}/`)
-            .then(res => res.json())
+            .then(person => person.json())
             .then(
                 (res) => {
                     const elementsIndex = this.state.people.findIndex((element) => element.id === id )
                     let newArray = [...this.state.people]
 
-                    newArray[elementsIndex] = {...newArray[elementsIndex], res}
+                    newArray[elementsIndex] = {...newArray[elementsIndex]}
                     this.setState({
                         people: newArray
-                    })
+                    }, () => this.state.people.map(item => console.log(item.res.name)))
                 },
                 (error) => {
                     console.log(error)
@@ -41,8 +42,35 @@ class App extends Component {
             )
     }
 
+    getImages(q) {
+        let params = {
+            api_key: "7709a330315816dcca53bebaed84d80e1086e94b37382354ece88f6958819cbb",
+            engine: "google",
+            ijn: 0,
+            q: "han solo",
+            google_domain: "google.com",
+            tbm: "isch"
+        }
+
+        params = {
+            ...params,
+            q: q
+        }
+
+        fetch(`https://cors-anywhere.herokuapp.com/https://serpapi.com/search?api_key=${params.api_key}&engine=${params.engine}&ijn=${params.ijn}&q=${params.q}&google_domain=${params.google_domain}&tbm=${params.tbm}`)
+            .then(res => res.json())
+            .then(res => {
+                console.log(res.images_results)
+            },
+                (err) => {
+                console.log(err)
+                }
+            )
+    }
+
     componentDidMount() {
         this.getData()
+        this.getImages()
     }
 
     handleVote(type, id) {
