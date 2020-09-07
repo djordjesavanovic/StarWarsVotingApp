@@ -1,8 +1,9 @@
 import React, {Component} from "react";
-import {Container, Row, Col} from 'reactstrap'
+import {Container, Row, Col, Jumbotron} from 'reactstrap'
 import * as firebase from "firebase";
 import StarWarsService from "../services/services";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import CharacterCard from "../components/CharacterCard";
 
 class MainView extends Component {
     constructor(props) {
@@ -11,6 +12,8 @@ class MainView extends Component {
         this.state = {
             people: []
         }
+
+        this.handleVote = this.handleVote.bind(this)
     }
 
     getData() {
@@ -83,25 +86,26 @@ class MainView extends Component {
     }
 
     render() {
+        
         return (
-            <Container className={'bg-light'}>
-                <Row>
-                    <Col>
+            <Container fluid className={'bg-light pt-3'}>
+                <Container>
+                    <Jumbotron className={'text-center mt-3'}>
+                        <h2>Star Wars Voting App</h2>
+                    </Jumbotron>
+                    <Row>
                         {
-                            this.state.people.map((person) => {
+                            this.state.people &&
+                            this.state.people.map((person, i) => {
                                 return (
-                                    <div style={{marginBottom: '10px'}} key={person.id}>
-                                        <button value={!person ? 0 : person.yay}
-                                                onClick={() => this.handleVote('yay', person.id)}>YAY: {!person ? 0 : person.yay}</button>
-                                        <button value={!person ? 0 : person.nay}
-                                                onClick={() => this.handleVote('nay', person.id)}>NAY: {!person ? 0 : person.nay}</button>
-                                        <br/>
-                                    </div>
+                                    <Col lg={4} key={i}>
+                                        <CharacterCard person={person} handleVote={this.handleVote} />
+                                    </Col>
                                 )
                             })
                         }
-                    </Col>
-                </Row>
+                    </Row>
+                </Container>
             </Container>
         )
     }

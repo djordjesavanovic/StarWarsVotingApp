@@ -4,16 +4,11 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
 } from "react-router-dom";
 
 import MainView from "./views/MainView";
 
 class App extends Component {
-
-    constructor(props) {
-        super(props);
-    }
 
     render() {
         return (
