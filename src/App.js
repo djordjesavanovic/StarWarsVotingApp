@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import * as firebase from "firebase";
-import axios from 'axios'
+import StarWarsService from "./services/services";
 
 class App extends Component {
 
@@ -24,53 +24,44 @@ class App extends Component {
     }
 
     getCharacters(id) {
-        fetch(`https://swapi.dev/api/people/${id}/`)
-            .then(person => person.json())
-            .then(
-                (res) => {
-                    const elementsIndex = this.state.people.findIndex((element) => element.id === id )
-                    let newArray = [...this.state.people]
+        StarWarsService.getCharacters(id)
+            .then(() => {
+                let characterIndex = this.state.people.findIndex((character) => character.id === id )
+                let newArray = [...this.state.people]
 
-                    newArray[elementsIndex] = {...newArray[elementsIndex]}
-                    this.setState({
-                        people: newArray
-                    }, () => this.state.people.map(item => console.log(item.res.name)))
-                },
-                (error) => {
-                    console.log(error)
-                }
-            )
+                newArray[characterIndex] = {...newArray[characterIndex]}
+                this.setState({
+                    people: newArray
+                })
+            })
+            .then(() => {
+                this.state.people.map((item) => {
+                    this.getImages(item.res.name)
+                })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     getImages(q) {
-        let params = {
-            api_key: "7709a330315816dcca53bebaed84d80e1086e94b37382354ece88f6958819cbb",
-            engine: "google",
-            ijn: 0,
-            q: "han solo",
-            google_domain: "google.com",
-            tbm: "isch"
-        }
+        StarWarsService.getImages(q)
+            .then((res) => {
+                const elementsIndex = this.state.people.findIndex((element) => element.res.name === q )
+                let newArray = [...this.state.people]
 
-        params = {
-            ...params,
-            q: q
-        }
+                newArray[elementsIndex] = {...newArray[elementsIndex], imageURL: res.data.images_results[Math.floor(Math.random() * 100)].original}
 
-        fetch(`https://cors-anywhere.herokuapp.com/https://serpapi.com/search?api_key=${params.api_key}&engine=${params.engine}&ijn=${params.ijn}&q=${params.q}&google_domain=${params.google_domain}&tbm=${params.tbm}`)
-            .then(res => res.json())
-            .then(res => {
-                console.log(res.images_results)
-            },
-                (err) => {
+                this.setState({people: newArray})
+
+            })
+            .catch((err) => {
                 console.log(err)
-                }
-            )
+            })
     }
 
     componentDidMount() {
         this.getData()
-        this.getImages()
     }
 
     handleVote(type, id) {
@@ -80,13 +71,11 @@ class App extends Component {
         if (type === 'yay') {
             newArray[elementsIndex] = {...newArray[elementsIndex], yay: newArray[elementsIndex].yay + 1}
         }
-
         if (type === 'nay') {
             newArray[elementsIndex] = {...newArray[elementsIndex], nay: newArray[elementsIndex].nay + 1}
         }
 
         const ref = firebase.database().ref('/people')
-
         ref.update(newArray)
     }
 
