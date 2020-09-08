@@ -23,23 +23,25 @@ class MainView extends Component {
             const state = snapshot.val();
             const people = state.filter(Boolean);
             this.setState({people: people}, () => this.state.people.map(item => this.getCharacters(item.id)));
-        });
+        })
     }
 
     getCharacters(id) {
         StarWarsService.getCharacters(id)
-            .then(() => {
+            .then((res) => {
+                let person = res.data
                 let characterIndex = this.state.people.findIndex((character) => character.id === id)
                 let newArray = [...this.state.people]
 
-                newArray[characterIndex] = {...newArray[characterIndex]}
+                newArray[characterIndex] = {...newArray[characterIndex], person}
+
                 this.setState({
                     people: newArray
                 })
             })
             .then(() => {
                 this.state.people.map((item) => {
-                    this.getImages(item.res.name)
+                    this.getImages(item.person.name)
                 })
             })
             .catch((err) => {
@@ -50,19 +52,19 @@ class MainView extends Component {
     getImages(q) {
         StarWarsService.getImages(q)
             .then((res) => {
-                const elementsIndex = this.state.people.findIndex((element) => element.res.name === q)
+                const elementsIndex = this.state.people.findIndex((element) => element.person.name === q)
                 let newArray = [...this.state.people]
 
                 newArray[elementsIndex] = {
                     ...newArray[elementsIndex],
-                    imageURL: res.data.images_results[Math.floor(Math.random() * 100)].original
+                    imageURL: res.data.images_results[Math.floor(Math.random() * 10)].original
                 }
 
-                this.setState({people: newArray})
+                this.setState({people: newArray, loaded: true})
 
             })
             .catch((err) => {
-                console.log(err)
+                console.log(JSON.stringify(err))
             })
     }
 
@@ -77,8 +79,11 @@ class MainView extends Component {
             newArray[elementsIndex] = {...newArray[elementsIndex], nay: newArray[elementsIndex].nay + 1}
         }
 
+        delete newArray[elementsIndex].imageURL
+        delete newArray[elementsIndex].person
+
         const ref = firebase.database().ref('/people')
-        ref.update(newArray)
+        ref.update({[elementsIndex]: {...newArray[elementsIndex], yay: newArray[elementsIndex].yay + 1}})
     }
 
     componentDidMount() {
@@ -86,7 +91,7 @@ class MainView extends Component {
     }
 
     render() {
-        
+
         return (
             <Container fluid className={'bg-light pt-3'}>
                 <Container>
@@ -95,7 +100,7 @@ class MainView extends Component {
                     </Jumbotron>
                     <Row>
                         {
-                            this.state.people &&
+                            (this.state.loaded && this.state.people[9].hasOwnProperty('person')) &&
                             this.state.people.map((person, i) => {
                                 return (
                                     <Col lg={4} key={i}>

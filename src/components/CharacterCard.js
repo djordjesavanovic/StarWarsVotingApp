@@ -13,13 +13,14 @@ class CharacterCard extends Component {
     }
 
     render() {
-
         return (
             <Card className={'mb-3'}>
-                <CardImg top width="100%" height={200} src={this.props.person.imageURL}
-                         alt={this.props.person.res.name}/>
+                <CardImg top width="100%" height={200} src={!this.props.person.imageURL ? null : this.props.person.imageURL}
+                         alt={this.props.person.person.name}/>
                 <CardBody>
-                    Test
+                    <p>
+                        Birth year: {this.props.person.person.birth_year}
+                    </p>
                 </CardBody>
                 <CardFooter>
                     <Row>
