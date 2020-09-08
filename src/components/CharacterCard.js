@@ -13,13 +13,18 @@ class CharacterCard extends Component {
     }
 
     render() {
+        const placeholder = 'https://via.placeholder.com/400x300'
         return (
-            <Card className={'mb-3'}>
-                <CardImg top width="100%" height={200} src={!this.props.person.imageURL ? null : this.props.person.imageURL}
-                         alt={this.props.person.person.name}/>
+            <Card className={'mb-4'}>
+                <CardImg top width="100%" height={200} src={!this.props.person.imageURL ? placeholder : this.props.person.imageURL}
+                         alt={!this.props.person.person ? '' : this.props.person.person.name}/>
                 <CardBody>
                     <p>
-                        Birth year: {this.props.person.person.birth_year}
+                        <strong>Name:</strong> {!this.props.person.person ? '' : this.props.person.person.name} <br/>
+                        <strong>Birth year:</strong> {!this.props.person.person ? '' : this.props.person.person.birth_year} <br/>
+                        <strong>Gender:</strong> {!this.props.person.person ? '' : this.props.person.person.gender} <br/>
+                        <strong>Height:</strong> {!this.props.person.person ? '' : this.props.person.person.height} <br/>
+                        <strong>Hair color:</strong> {!this.props.person.person ? '' : this.props.person.person.hair_color}
                     </p>
                 </CardBody>
                 <CardFooter>

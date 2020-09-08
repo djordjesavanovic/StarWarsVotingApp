@@ -4,25 +4,41 @@ import * as firebase from "firebase";
 import StarWarsService from "../services/services";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CharacterCard from "../components/CharacterCard";
+import Loader from "../components/Loader/Loader";
 
 class MainView extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            people: []
+            people: [],
         }
-
+        this.getCharacters = this.getCharacters.bind(this)
         this.handleVote = this.handleVote.bind(this)
     }
 
     getData() {
         const ref = firebase.database().ref('/people')
 
-        ref.on("value", snapshot => {
+        ref.once("value", snapshot => {
             const state = snapshot.val();
             const people = state.filter(Boolean);
-            this.setState({people: people}, () => this.state.people.map(item => this.getCharacters(item.id)));
+            this.setState({people: people});
+        })
+            .then(() => {
+                this.state.people.map((item) => {this.getCharacters(item.id)})
+            })
+
+        ref.on("child_changed", snapshot => {
+            const child = snapshot.val();
+
+            let characterIndex = this.state.people.findIndex((character) => character.id === child.id)
+            let newArray = [...this.state.people]
+            newArray[characterIndex] = child
+
+            this.setState({
+                people: newArray
+            })
         })
     }
 
@@ -72,18 +88,15 @@ class MainView extends Component {
         const elementsIndex = this.state.people.findIndex((element) => element.id === id)
         let newArray = [...this.state.people]
 
+        const ref = firebase.database().ref('/people')
+
         if (type === 'yay') {
-            newArray[elementsIndex] = {...newArray[elementsIndex], yay: newArray[elementsIndex].yay + 1}
+            ref.update({[elementsIndex]: {...newArray[elementsIndex], yay: newArray[elementsIndex].yay + 1}})
         }
         if (type === 'nay') {
-            newArray[elementsIndex] = {...newArray[elementsIndex], nay: newArray[elementsIndex].nay + 1}
+            ref.update({[elementsIndex]: {...newArray[elementsIndex], nay: newArray[elementsIndex].nay + 1}})
         }
 
-        delete newArray[elementsIndex].imageURL
-        delete newArray[elementsIndex].person
-
-        const ref = firebase.database().ref('/people')
-        ref.update({[elementsIndex]: {...newArray[elementsIndex], yay: newArray[elementsIndex].yay + 1}})
     }
 
     componentDidMount() {
@@ -91,7 +104,6 @@ class MainView extends Component {
     }
 
     render() {
-
         return (
             <Container fluid className={'bg-light pt-3'}>
                 <Container>
@@ -100,14 +112,14 @@ class MainView extends Component {
                     </Jumbotron>
                     <Row>
                         {
-                            (this.state.loaded && this.state.people[9].hasOwnProperty('person')) &&
+                            (this.state.loaded && this.state.people[8].hasOwnProperty('person')) ?
                             this.state.people.map((person, i) => {
                                 return (
                                     <Col lg={4} key={i}>
                                         <CharacterCard person={person} handleVote={this.handleVote} />
                                     </Col>
                                 )
-                            })
+                            }) : <Loader text={'May the force be with you...'} />
                         }
                     </Row>
                 </Container>
