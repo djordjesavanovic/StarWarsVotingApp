@@ -16,6 +16,10 @@ const StarWarsService = {
     },
 
     getImages: (q) => {
+        /*
+        I had to use https://cors-anywhere.herokuapp.com, since seprapi kept giving me the CORS policy error and I can't really do anything about it, since it's on the server side.
+        'q' in this case is the search term, i.e. character's name
+        */
         let params = {
             api_key: "7709a330315816dcca53bebaed84d80e1086e94b37382354ece88f6958819cbb",
             engine: "google",
