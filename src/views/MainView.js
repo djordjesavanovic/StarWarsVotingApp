@@ -3,6 +3,9 @@ import {Container, Row, Col} from 'reactstrap'
 import * as firebase from "firebase";
 import StarWarsService from "../services/services";
 import 'bootstrap/dist/css/bootstrap.min.css';
+import {ToastContainer, toast} from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+import {css} from "glamor";
 import CharacterCard from "../components/CharacterCard/CharacterCard";
 import Loader from "../components/Loader/Loader";
 import logo from '../assets/img/logo.png'
@@ -16,6 +19,7 @@ class MainView extends Component {
         }
         this.getCharacters = this.getCharacters.bind(this)
         this.handleVote = this.handleVote.bind(this)
+        this.unsuccessful = this.unsuccessful.bind(this);
     }
 
     getData() {
@@ -66,6 +70,7 @@ class MainView extends Component {
             })
             .catch((err) => {
                 console.log(err)
+                this.unsuccessful()
             })
     }
 
@@ -105,13 +110,26 @@ class MainView extends Component {
         }
     }
 
+    unsuccessful(msg = 'Unsuccessful!') {
+        return toast.error(msg, {
+            className: css({
+                background: "#FFE300 !important"
+            })
+        });
+    }
+
     componentDidMount() {
         this.getData()
     }
 
     render() {
+        const containerStyle = {
+            zIndex: 1999
+        };
+
         return (
             <Container fluid className={'bg-dark pt-3'}>
+                <ToastContainer position="bottom-right" autoClose={15000} style={containerStyle}/>
                 <Container>
                     <Row className={'text-center mt-3 mb-5'}>
                         <Col>
