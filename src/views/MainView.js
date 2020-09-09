@@ -5,6 +5,7 @@ import StarWarsService from "../services/services";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CharacterCard from "../components/CharacterCard";
 import Loader from "../components/Loader/Loader";
+import logo from '../assets/img/logo.png'
 
 class MainView extends Component {
     constructor(props) {
@@ -96,7 +97,6 @@ class MainView extends Component {
         if (type === 'nay') {
             ref.update({[elementsIndex]: {...newArray[elementsIndex], nay: newArray[elementsIndex].nay + 1}})
         }
-
     }
 
     componentDidMount() {
@@ -105,11 +105,13 @@ class MainView extends Component {
 
     render() {
         return (
-            <Container fluid className={'bg-light pt-3'}>
+            <Container fluid className={'bg-dark pt-3'}>
                 <Container>
-                    <Jumbotron className={'text-center mt-3'}>
-                        <h2>Star Wars Voting App</h2>
-                    </Jumbotron>
+                    <Row className={'text-center mt-3 mb-5'}>
+                        <Col>
+                            <img src={logo} alt={'Star Wars Logo'} className={'starWarsLogo'}/>
+                        </Col>
+                    </Row>
                     <Row>
                         {
                             (this.state.loaded && this.state.people[8].hasOwnProperty('person')) ?

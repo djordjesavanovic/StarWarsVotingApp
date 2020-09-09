@@ -7,7 +7,7 @@ const Loader = (props) => {
 
     return (
         <Col lg={12} className={'text-center align-center align-self-center pt-5 pb-5'}>
-            <h3>{text}</h3>
+            <h3 className={'text-white'}>{text}</h3>
         </Col>
     )
 }

@@ -1,5 +1,7 @@
 import React, {Component} from 'react'
 import {Row, Col, Card, CardImg, CardBody, CardFooter, Button} from "reactstrap";
+import dislike from '../assets/img/dislike.png'
+import like from '../assets/img/like.png'
 
 class CharacterCard extends Component {
     constructor(props) {
@@ -15,15 +17,15 @@ class CharacterCard extends Component {
     render() {
         const placeholder = 'https://via.placeholder.com/400x300'
         return (
-            <Card className={'mb-4'}>
+            <Card className={'mb-4 bg-dark text-white'}>
                 <CardImg top width="100%" height={200} src={!this.props.person.imageURL ? placeholder : this.props.person.imageURL}
                          alt={!this.props.person.person ? '' : this.props.person.person.name}/>
-                <CardBody>
+                <CardBody className={'pb-1'}>
                     <p>
                         <strong>Name:</strong> {!this.props.person.person ? '' : this.props.person.person.name} <br/>
                         <strong>Birth year:</strong> {!this.props.person.person ? '' : this.props.person.person.birth_year} <br/>
-                        <strong>Gender:</strong> {!this.props.person.person ? '' : this.props.person.person.gender} <br/>
-                        <strong>Height:</strong> {!this.props.person.person ? '' : this.props.person.person.height} <br/>
+                        <strong>Gender:</strong> {!this.props.person.person ? '' : this.props.person.person.gender === 'n/a' ? 'Probably a robot...' : this.props.person.person.gender} <br/>
+                        <strong>Height:</strong> {!this.props.person.person ? '' : this.props.person.person.height} cm<br/>
                         <strong>Hair color:</strong> {!this.props.person.person ? '' : this.props.person.person.hair_color}
                     </p>
                 </CardBody>
@@ -33,14 +35,16 @@ class CharacterCard extends Component {
                             <Button color={'success'} block
                                     onClick={() => this.handleVote('yay', this.props.person.id)}
                             >
-                                Yay {this.props.person.yay}
+                                <img src={like} alt={'Yay'} className={'voteIcon'} />
+                                {this.props.person.yay}
                             </Button>
                         </Col>
                         <Col>
                             <Button color={'danger'} block
                                     onClick={() => this.handleVote('nay', this.props.person.id)}
                             >
-                                Nay {this.props.person.nay}
+                                <img src={dislike} alt={'Nay'} className={'voteIcon'} />
+                                {this.props.person.nay}
                             </Button>
                         </Col>
                     </Row>
