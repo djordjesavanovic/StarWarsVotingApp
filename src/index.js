@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import * as firebase from "firebase";
 
+// Firebase config and initialization
 let firebaseConfig = {
     apiKey: "AIzaSyBS4zF-KPrqs4NGBR2gbhKr1ximGLM_ArI",
     authDomain: "starwarsvotingapp.firebaseapp.com",

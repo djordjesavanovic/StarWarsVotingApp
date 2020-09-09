@@ -1,7 +1,7 @@
 import React, {Component} from 'react'
 import {Row, Col, Card, CardImg, CardBody, CardFooter, Button} from "reactstrap";
-import dislike from '../assets/img/dislike.png'
-import like from '../assets/img/like.png'
+import dislike from '../../assets/img/dislike.png'
+import like from '../../assets/img/like.png'
 
 class CharacterCard extends Component {
     constructor(props) {
