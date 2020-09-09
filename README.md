@@ -1,4 +1,36 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+### Intro & Description
+
+**Star Wars Voting App** is a React-based web app, which features 9 of my favourite Star Wars characters, with their pictures, basic info and an option to upvote and/or downvote them respectively.
+
+The project was bootstrapped with `create-react-app` and finalized with the help of following packaged:
+- **Firebase**
+ - Packaged used for connecting to the Firebase Realtime Database and its frontend logic 
+- **Reactstrap** (+ Bootstrap)
+ - Prebuilt React components, based on Bootstrap
+- **React Router**
+ - Used for simple routing
+- **Axios**
+ - Used for making requests to the APIs
+
+Multiple APIs and other technologies were used to make this app happen:
+- **Firebase Realtime Database**
+ - Used for storing the data, as well as updating it in frontend in the real time.
+- **Swapi API**
+ - Used for fetching Star Wars characters and their basic info
+- **Serpapi (Google Image Search)**
+ - Used for fetching images from Google, based on characters' names
+
+
+Based on my understanding of the taks, the logic implemented functions in the following way:
+1. Frontend connects to the Firebase Realtime Database and fetches the initial properties
+2. Based on the data fetched, I map through that array and for each ID, I send one request to Swapi API, using the ID as the argument 
+3. The intial array is then enriched witht he characters' data
+4. Once that's done, I map through the array once more and based on the character's name, I send a request to google image search for each character respectively
+5. Since the lowest amount of images returned is 100, I simpley use a random index of the image array and take that random picture and assign it to a character
+6. User can now see the full list and upvote/downvote the characters (listener for voting is started right on the component mount)
+
+------------
+
 
 ## Available Scripts
 
